@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration page</title>
+</head>
+<body>
+    <h1> Welcome to the Registration page. Please kindly register below </h1>
+
+    <form th:action="@{/registration}" method="post" th:object="${newUser}" >
+
+        <div>
+            Email : <input th:field="*{email}" type="email" name="email" />
+        </div>
+        <div>
+            First Name : <input th:field="*{firstName}" type="text" name="firstName" />
+        </div>
+        <div>
+            Last Name: <input th:field="*{lastName}" type="text" name="lastName" />
+        </div>
+        <div>
+            Department : <input th:field="*{department}" name="department" />
+        </div>
+        <button type="submit"> Submit </button>
+    </form>
+
+
+</body>
+</html>
