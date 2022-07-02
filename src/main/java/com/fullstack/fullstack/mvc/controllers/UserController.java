@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fullstack.fullstack.dao.database.JDBCRepository;
+import com.fullstack.fullstack.dto.AuthenticationDTO;
 import com.fullstack.fullstack.dto.User;
 
 @Controller
@@ -39,6 +40,14 @@ public class UserController{
         User user = repository.getUserByEmail("sundayenyinna@gmail.com");
         model.addAttribute("user", user);
         return "user";
+    }
+
+    @GetMapping("/auth")
+    public String showAuthenticatedUser( Model model ){
+        AuthenticationDTO auth = repository.getAuthenticatedUser("sundaylucky360@yahoo.com");
+        System.out.println( auth );
+        model.addAttribute("auth", auth);
+        return "auth";
     }
 
     /**
