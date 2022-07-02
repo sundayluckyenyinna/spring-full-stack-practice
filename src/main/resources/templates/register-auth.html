@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Registration</title>
+</head>
+<body>
+    
+    <h1> Welcome to where we register new authentication object </h1>
+    <form th:action="@{/register-auth}" method="post" th:object="${auth}">
+        <div>
+            User ID : <input th:field="*{userId}" name="userId" />
+            <p th:if="${#fields.hasErrors('userId')}" th:errors="*{userId}" style="color: red;"> Incorrect userId </p>
+        </div>
+        <div>
+            Username : <input th:field="*{username}" name="username" />
+            <p th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: green;"> Incorrect username </p>
+        </div>
+        <div>
+            Password : <input th:field="*{password}" name="password" />
+            <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}"> Incorrect password </p>
+        </div>
+        <div>
+            Roles : <input th:field="*{roles}" name="roles" />
+            <p th:if="${#fields.hasErrors('roles')}" th:errors="*{roles}"> Incorrect Roles </p>
+        </div>
+        <div>
+            Authorities : <input th:field="*{authorities}" name="authorities" />
+            <p th:if="${#fields.hasErrors('authorities')}" th:errors="*{authorities}"> authorities </p>
+        </div>
+        <button type="submit"> Submit </button>
+    </form>
+
+</body>
+</html>

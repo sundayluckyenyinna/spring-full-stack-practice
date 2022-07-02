@@ -2,17 +2,21 @@ package com.fullstack.fullstack.mvc.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fullstack.fullstack.dao.database.JDBCRepository;
 import com.fullstack.fullstack.dto.AuthenticationDTO;
+import com.fullstack.fullstack.dto.ConcreteDTO;
 import com.fullstack.fullstack.dto.User;
 
 @Controller
@@ -44,7 +48,7 @@ public class UserController{
 
     @GetMapping("/auth")
     public String showAuthenticatedUser( Model model ){
-        AuthenticationDTO auth = repository.getAuthenticatedUser("sundaylucky360@yahoo.com");
+        AuthenticationDTO auth = repository.getAuthenticatedUser("sundayluckyenyinna@gmail.com");
         System.out.println( auth );
         model.addAttribute("auth", auth);
         return "auth";
@@ -71,6 +75,23 @@ public class UserController{
         User user = new User().setEmail(email).setFirstName(firstName);
         System.out.println( user.toString() );
         // return "redirect:/home";
+    }
+
+    @GetMapping("/register-auth")
+    public String registerAuth(Model model){
+        ConcreteDTO auth = new ConcreteDTO();
+        model.addAttribute("auth", auth);
+        return "register-auth";
+    }
+
+    @PostMapping("/register-auth")
+    public String handleRegisterAuth( @Valid @ModelAttribute("auth") ConcreteDTO auth, BindingResult br ){
+        // System.out.println( br.hasErrors() );
+        if( br.hasErrors() ){
+            return "register-auth";
+        }
+        System.out.println( auth.getUserId().isEmpty() );
+        return "home";
     }
 
 }
