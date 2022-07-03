@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> All authentications </title>
+</head>
+<body>
+    <h1> Welcome to this page </h1>
+
+    <div th:each="dto : ${list}">
+        <section>
+            <ul>
+                <li th:text="${dto.userId}"></li>
+                <li th:text="${dto.getUsername()}"></li>
+                <li th:text="${dto.getPassword()}"></li>
+                <li th:text="${dto.getRoles()}"></li>
+                <li th:text="${dto.getAuthorities()}"></li>
+            </ul>
+        </section>
+
+        <!-- Get a message from the nessage.properties resource bundles -->
+        <p th:text="#{app.titles}"></p>
+    </div>
+
+    <form th:action="@{/fileUpload}" enctype="multipart/form-data" method="post">
+        <input type="file" name="myFile" />
+        <button type="submit"> Upload Image </button>
+    </form>
+
+</body>
+</html>

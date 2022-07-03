@@ -5,9 +5,13 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 import com.fullstack.fullstack.util.database_prop.DataSourcePropertiesProvider;
 
@@ -46,5 +50,20 @@ public class JdbcTemplateManager {
         dataSource.setUsername(properties.getUsername());
         dataSource.setPassword(properties.getPassword());
         return dataSource;
+    }
+
+    // create a bean for the spring framework to initialize the database
+    @Bean
+    public DataSourceInitializer dataSourceInitializer(){
+        DataSourceInitializer dataSourceinitializer = new DataSourceInitializer();
+        dataSourceinitializer.setDataSource(getSeconDataSource());
+
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScript(new ClassPathResource("scripts/schema.sql"));
+        resourceDatabasePopulator.addScript(new ClassPathResource("scripts/data.sql"));
+
+        dataSourceinitializer.setDatabasePopulator(resourceDatabasePopulator);
+        dataSourceinitializer.setEnabled(true);
+        return dataSourceinitializer;
     }
 }

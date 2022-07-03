@@ -1,14 +1,18 @@
 package com.fullstack.fullstack.dao.database;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.fullstack.fullstack.dto.AuthenticationDTO;
@@ -52,7 +56,7 @@ public class JDBCRepository{
         JdbcTemplate jdbcTemplate = this.jdbcTemplateManager.getSeconJdbcTemplate();
         
         String sql = "SELECT * FROM Users WHERE Username = ?";
-        return jdbcTemplate.queryForObject(sql, new RowMapper<AuthenticationDTO>(){
+        List<AuthenticationDTO> list =  jdbcTemplate.query(sql, new RowMapper<AuthenticationDTO>(){
             @Override
             public AuthenticationDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
                 AuthenticationDTO authDTO = new AuthenticationDTO();
@@ -64,5 +68,40 @@ public class JDBCRepository{
                 return authDTO;
             }
         }, new Object[]{username});
+
+        return list.stream().findFirst().orElse(null);
     }
+
+    @Transactional
+    public AuthenticationDTO saveNewUser( AuthenticationDTO auth ){
+        JdbcTemplate jdbcTemplate = this.jdbcTemplateManager.getSeconJdbcTemplate();
+
+        String userId = auth.getUserId();
+        String username = auth.getUsername();
+        String password = auth.getPassword();
+        String roles = auth.getRoles();
+        String authorities = auth.getAuthorities();
+
+        String sql = " INSERT INTO Users VALUES (?, ?, ?, ?, ?)";
+
+        jdbcTemplate.update(sql, userId, username, password, roles, authorities);
+
+        return auth;
+    }
+
+    @Transactional
+    public List<AuthenticationDTO> getAllAuthenticationDTOs(){
+        JdbcTemplate jdbcTemplate = this.jdbcTemplateManager.getSeconJdbcTemplate();
+        String sql = "SELECT * FROM Users";
+        return jdbcTemplate.query(sql, (rs, rowNum) -> {
+            AuthenticationDTO dto = new AuthenticationDTO();
+            dto.setUserId(rs.getString("User_ID"))
+                .setUsername(rs.getString("Username"))
+                .setPassword(rs.getString("Password"))
+                .setRoles( rs.getString("Roles"))
+                .setAuthorities(rs.getString("Authorities"));
+            return dto;
+        });
+    }
+
 }
